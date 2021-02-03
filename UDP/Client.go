@@ -9,14 +9,7 @@ import (
 )
 
 func main() {
-	arguments := os.Args
-	if len(arguments) == 1 {
-		fmt.Println("Please provide a host:port string")
-		return
-	}
-	CONNECT := arguments[1]
-
-	s, err := net.ResolveUDPAddr("udp4", CONNECT)
+	s, err := net.ResolveUDPAddr("udp4", "localhost:8000")
 	c, err := net.DialUDP("udp4", nil, s)
 	if err != nil {
 		fmt.Println(err)
@@ -27,12 +20,14 @@ func main() {
 	defer c.Close()
 
 	for {
+		fmt.Println("Enter your math expression or type 'exit' to exit!\n" +
+			"Use format 'number1 operator number2'")
 		reader := bufio.NewReader(os.Stdin)
 		fmt.Print(">> ")
 		text, _ := reader.ReadString('\n')
 		data := []byte(text + "\n")
 		_, err = c.Write(data)
-		if strings.TrimSpace(string(data)) == "STOP" {
+		if strings.EqualFold(strings.TrimSpace(string(data)), "exit") {
 			fmt.Println("Exiting UDP client!")
 			return
 		}
@@ -48,6 +43,6 @@ func main() {
 			fmt.Println(err)
 			return
 		}
-		fmt.Printf("Reply: %s\n", string(buffer[0:n]))
+		fmt.Printf("Result: %s\n\n", string(buffer[0:n]))
 	}
 }
