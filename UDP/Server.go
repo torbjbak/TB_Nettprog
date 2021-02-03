@@ -9,12 +9,6 @@ import (
 	"time"
 )
 
-var count = 0
-
-func random(min, max int) int {
-	return rand.Intn(max-min) + min
-}
-
 func calculate(number1, number2 float64, operator string) []byte {
 	var result float64
 	switch strings.ToLower(operator) {
