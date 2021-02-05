@@ -12,22 +12,20 @@ import (
 func calculate(number1, number2 float64, operator string) []byte {
 	var result float64
 	switch strings.ToLower(operator) {
-	case "plus":
-	case "+":
+	case "plus", "+":
 		result = number1 + number2
 		break
-	case "minus":
-	case "-":
+	case "minus", "-":
 		result = number1 - number2
 		break
-	case "multiply":
-	case "*":
+	case "multiply", "*":
 		result = number1 * number2
 		break
-	case "divide":
-	case "/":
+	case "divide", "/":
 		result = number1 / number2
 		break
+	default:
+		return []byte("Invalid operator!")
 	}
 	return []byte(strconv.FormatFloat(result, 'f', -1, 64))
 }
@@ -73,7 +71,7 @@ func main() {
 				data = []byte("Arguments are not numbers!")
 			}
 		} else {
-			data = []byte("Incorrect number of arguments!")
+			data = []byte("Invalid number of arguments!")
 		}
 
 		_, err = connection.WriteToUDP(data, addr)
