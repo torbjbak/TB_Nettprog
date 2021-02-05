@@ -1,37 +1,36 @@
 package main
 
-public class JavaSSLClient {
+import (
+	"crypto/tls"
+	"log"
+)
 
-static final int port = 8000;
+func main() {
+	log.SetFlags(log.Lshortfile)
 
-public static void main(String[] args) {
+	conf := &tls.Config{
+		//InsecureSkipVerify: true,
+	}
 
-SSLSocketFactory sslSocketFactory =
-(SSLSocketFactory)SSLSocketFactory.getDefault();
-try {
-Socket socket = sslSocketFactory.createSocket("localhost", port);
-PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-try (BufferedReader bufferedReader =
-new BufferedReader(
-new InputStreamReader(socket.getInputStream()))) {
-Scanner scanner = new Scanner(System.in);
-while(true){
-System.out.println("Enter something:");
-String inputLine = scanner.nextLine();
-if(inputLine.equals("q")){
-break;
-}
+	conn, err := tls.Dial("tcp", "127.0.0.1:443", conf)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer conn.Close()
 
-out.println(inputLine);
-System.out.println(bufferedReader.readLine());
-}
-}
+	n, err := conn.Write([]byte("hello\n"))
+	if err != nil {
+		log.Println(n, err)
+		return
+	}
 
-} catch (IOException ex) {
-Logger.getLogger(JavaSSLClient.class.getName())
-.log(Level.SEVERE, null, ex);
-}
+	buf := make([]byte, 100)
+	n, err = conn.Read(buf)
+	if err != nil {
+		log.Println(n, err)
+		return
+	}
 
-}
-
+	println(string(buf[:n]))
 }

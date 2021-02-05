@@ -1,40 +1,55 @@
 package main
 
-public class JavaSSLServer {
+import (
+	"bufio"
+	"crypto/tls"
+	"log"
+	"net"
+)
 
-static final int port = 8000;
+func main() {
+	log.SetFlags(log.Lshortfile)
 
-public static void main(String[] args) {
+	cer, err := tls.LoadX509KeyPair("server.crt", "server.key")
+	if err != nil {
+		log.Println(err)
+		return
+	}
 
+	config := &tls.Config{Certificates: []tls.Certificate{cer}}
+	ln, err := tls.Listen("tcp", ":443", config)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	defer ln.Close()
 
-SSLServerSocketFactory sslServerSocketFactory =
-(SSLServerSocketFactory)SSLServerSocketFactory.getDefault();
-
-try {
-ServerSocket sslServerSocket =
-sslServerSocketFactory.createServerSocket(port);
-System.out.println("SSL ServerSocket started");
-System.out.println(sslServerSocket.toString());
-
-Socket socket = sslServerSocket.accept();
-System.out.println("ServerSocket accepted");
-
-PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-try (BufferedReader bufferedReader =
-new BufferedReader(
-new InputStreamReader(socket.getInputStream()))) {
-String line;
-while((line = bufferedReader.readLine()) != null){
-System.out.println(line);
-out.println(line);
-}
-}
-System.out.println("Closed");
-
-} catch (IOException ex) {
-Logger.getLogger(JavaSSLServer.class.getName())
-.log(Level.SEVERE, null, ex);
-}
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			log.Println(err)
+			continue
+		}
+		go handleConnection(conn)
+	}
 }
 
+func handleConnection(conn net.Conn) {
+	defer conn.Close()
+	r := bufio.NewReader(conn)
+	for {
+		msg, err := r.ReadString('\n')
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		println(msg)
+
+		n, err := conn.Write([]byte("world\n"))
+		if err != nil {
+			log.Println(n, err)
+			return
+		}
+	}
 }
