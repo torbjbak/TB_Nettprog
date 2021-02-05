@@ -9,10 +9,10 @@ func main() {
 	log.SetFlags(log.Lshortfile)
 
 	conf := &tls.Config{
-		//InsecureSkipVerify: true,
+		InsecureSkipVerify: true,
 	}
 
-	conn, err := tls.Dial("tcp", "127.0.0.1:443", conf)
+	conn, err := tls.Dial("tcp", "localhost:8000", conf)
 	if err != nil {
 		log.Println(err)
 		return
