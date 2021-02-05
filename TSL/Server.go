@@ -3,6 +3,8 @@ package main
 import (
 	"bufio"
 	"crypto/tls"
+	"errors"
+	"io"
 	"log"
 	"net"
 )
@@ -40,6 +42,9 @@ func handleConnection(conn net.Conn) {
 	for {
 		msg, err := r.ReadString('\n')
 		if err != nil {
+			if errors.Is(io.EOF, err) {
+				continue
+			}
 			log.Println(err)
 			return
 		}
