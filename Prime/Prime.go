@@ -20,7 +20,7 @@ func isPrime(n int) bool {
 
 func findPrimes(n1, n2 int) []int {
 	var primes []int
-	for i := n1; i < n2; i++ {
+	for i := n1; i <= n2; i++ {
 		if isPrime(i) {
 			primes = append(primes, i)
 		}
@@ -50,8 +50,8 @@ func main() {
 	n2, _ := strconv.Atoi(os.Args[2])
 	nrSeg, _ := strconv.Atoi(os.Args[3])
 	segments := split(n1, n2, nrSeg)
+	fmt.Println(segments)
 	for i := 0; i < nrSeg; i++ {
-		print("seg ", i+1, ": ")
-		fmt.Printf("%d\n", findPrimes(segments[i][0], segments[i][1]))
+		fmt.Printf("seg %d: %d\n", i+1, findPrimes(segments[i][0], segments[i][1]))
 	}
 }
