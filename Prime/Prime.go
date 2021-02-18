@@ -8,18 +8,20 @@ import (
 )
 
 func isPrime(n int) bool {
-	isPrime := true
+	prime := true
+
 	for i := 2; i <= int(math.Sqrt(float64(n))); i++ {
 		if n%i == 0 {
-			isPrime = false
+			prime = false
 			break
 		}
 	}
-	return isPrime
+	return prime
 }
 
 func findPrimes(n1, n2 int) []int {
 	var primes []int
+
 	for i := n1; i <= n2; i++ {
 		if isPrime(i) {
 			primes = append(primes, i)
@@ -33,6 +35,7 @@ func split(n1, n2, nrSeg int) [][2]int {
 	size := (n2 - n1 + 1) / nrSeg
 	rest := (n2 - n1 + 1) % nrSeg
 	counter := n1
+
 	for i := 1; i <= nrSeg; i++ {
 		if i <= rest {
 			segments = append(segments, [2]int{counter, counter + size})
