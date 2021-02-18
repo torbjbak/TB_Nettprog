@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"sort"
 	"strconv"
+	"sync"
 )
 
 func isPrime(n int) bool {
@@ -19,15 +21,13 @@ func isPrime(n int) bool {
 	return prime
 }
 
-func findPrimes(n1, n2 int) []int {
-	var primes []int
-
+func findPrimes(n1, n2 int, wg *sync.WaitGroup, ch chan int) {
+	defer wg.Done()
 	for i := n1; i <= n2; i++ {
 		if isPrime(i) {
-			primes = append(primes, i)
+			ch <- i
 		}
 	}
-	return primes
 }
 
 func split(n1, n2, nrSeg int) [][2]int {
@@ -53,8 +53,25 @@ func main() {
 	n2, _ := strconv.Atoi(os.Args[2])
 	nrSeg, _ := strconv.Atoi(os.Args[3])
 	segments := split(n1, n2, nrSeg)
+	var wg sync.WaitGroup
+	ch := make(chan int)
+
 	fmt.Println(segments)
 	for i := 0; i < nrSeg; i++ {
-		fmt.Printf("seg %d: %d\n", i+1, findPrimes(segments[i][0], segments[i][1]))
+		wg.Add(1)
+		go findPrimes(segments[i][0], segments[i][1], &wg, ch)
 	}
+
+	go func() {
+		wg.Wait()
+		close(ch)
+	}()
+
+	var primes []int
+	for k := range ch {
+		primes = append(primes, k)
+	}
+
+	sort.Ints(primes)
+	fmt.Println(primes)
 }
