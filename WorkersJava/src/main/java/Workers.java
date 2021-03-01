@@ -2,33 +2,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Function;
 
 public class Workers {
-    private final List<Worker> workers;
-    private final List<Task> tasks;
-    private final Lock lock = new ReentrantLock();
-    private final Condition cond = lock.newCondition();
+    private final List<Runnable> tasks;
 
     public Workers() {
-        this.workers = new ArrayList<>();
         this.tasks = new ArrayList<>();
     }
 
-    public List<Worker> getWorkers() {
-        return workers;
-    }
-
-    public List<Task> getTasks() {
+    public List<Runnable> getTasks() {
         return tasks;
     }
 
-    public void addWorker() {
-        workers.add(new Worker());
+    public void post(String name, Lock mutex, long duration) {
+        mutex.lock();
+        tasks.add(new WorkerThread(name, mutex, duration));
+        mutex.unlock();
     }
 
-    public void addTask(Function<Condition, Void> f) {
-        tasks.add(new Task(f));
+    public void postTimeout(String name, Lock mutex, long duration, long delay) {
+        mutex.lock();
+        tasks.add(new WorkerThread(name, mutex, duration, delay));
+        mutex.unlock();
     }
 }
