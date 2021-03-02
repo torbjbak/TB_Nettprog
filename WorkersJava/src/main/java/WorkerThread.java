@@ -1,7 +1,7 @@
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
-public class WorkerThread implements Runnable{
+public class WorkerThread implements Runnable {
     private final String task;
     private final Lock mutex;
     private final Condition cond;

@@ -5,8 +5,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
+
     public static void main(String[] args) {
         int nThreads = 0;
+
         try {
             nThreads = Integer.parseInt(args[0]);
         } catch (NumberFormatException nfe) {
@@ -28,7 +30,6 @@ public class Main {
             executor.execute(wt);
         }
 
-        System.out.println("Finished all threads");
         executor.shutdown();
     }
 }
