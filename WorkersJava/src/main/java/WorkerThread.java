@@ -44,7 +44,7 @@ public class WorkerThread implements Runnable {
                     " ("+ (double)duration/1000 +"s)");
 
             Thread.sleep(this.duration);
-            System.out.println(Thread.currentThread().getName() +" (End)"+ task);
+            System.out.println(Thread.currentThread().getName() +" (End) "+ task);
 
             if (this.delay > 0 && !wait) {
                 mutex.lock();
