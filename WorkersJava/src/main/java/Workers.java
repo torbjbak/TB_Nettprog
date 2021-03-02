@@ -14,15 +14,21 @@ public class Workers {
         return tasks;
     }
 
-    public void post(String name, Lock mutex, long duration) {
+    public void post(String name, Lock mutex, Condition cond, long duration) {
         mutex.lock();
-        tasks.add(new WorkerThread(name, mutex, duration));
+        tasks.add(new WorkerThread(name, mutex, cond, duration, false));
         mutex.unlock();
     }
 
-    public void postTimeout(String name, Lock mutex, long duration, long delay) {
+    public void postTimeout(String name, Lock mutex, Condition cond, long duration, long delay) {
         mutex.lock();
-        tasks.add(new WorkerThread(name, mutex, duration, delay));
+        tasks.add(new WorkerThread(name, mutex, cond, duration, delay, false));
+        mutex.unlock();
+    }
+
+    public void postWait(String name, Lock mutex, Condition cond, long duration) {
+        mutex.lock();
+        tasks.add(new WorkerThread(name, mutex, cond, duration, true));
         mutex.unlock();
     }
 }

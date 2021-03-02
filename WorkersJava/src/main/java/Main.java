@@ -19,16 +19,16 @@ public class Main {
         final Lock mutex = new ReentrantLock();
         final Condition cond = mutex.newCondition();
 
-        workers.post("TaskA", mutex, 1500L);
-        workers.post("TaskB", mutex, 1200L);
-        workers.postTimeout("TaskC", mutex, 1000L, 5000L);
-        workers.post("TaskD", mutex, 2000L);
+        workers.post("TaskA", mutex, cond, 1500L);
+        workers.post("TaskB", mutex,cond, 1200L);
+        workers.postTimeout("TaskC", mutex, cond, 1000L, 5000L);
+        workers.postWait("TaskD", mutex, cond, 2000L);
 
         for (Runnable wt : workers.getTasks()) {
             executor.execute(wt);
         }
 
-        executor.shutdown();
         System.out.println("Finished all threads");
+        executor.shutdown();
     }
 }
