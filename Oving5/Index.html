@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Static/MyStyle.css">
+    <title>Arbeidskrav 5</title>
+</head>
+<body>
+<section>
+    <article>
+        <form action="/" method="post">
+            <fieldset>
+                <legend>Code</legend>
+                <label for="code"></label>
+                <textarea id="code"
+                          name="code"
+                          autocomplete="off"
+                          required
+                          autofocus>{{ .Code }}
+                </textarea>
+            </fieldset>
+            <button>Send</button>
+        </form>
+    </article>
+    <article>
+        <fieldset>
+            <legend>Output</legend>
+            <pre><code class="bash">{{ .Output }}</code></pre>
+        </fieldset>
+    </article>
+</section>
+</body>
+</html>
