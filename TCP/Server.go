@@ -24,7 +24,7 @@ func main() {
 	}
 	defer l.Close()
 
-	c, err := l.Accept()
+c, err := l.Accept()
 	if err != nil {
 		fmt.Println(err)
 		return
